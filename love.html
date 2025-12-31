@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year My Love</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap');
+        
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Kanit', sans-serif;
+            background-color: #000; overflow: hidden; color: white;
+        }
+
+        .container {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; height: 100vh; text-align: center;
+            position: relative; z-index: 10;
+        }
+
+        /* หน้าแรก */
+        #page1, #page2, #page3 { width: 100%; height: 100%; display: none; }
+        #page1 { display: flex; }
+
+        button {
+            padding: 15px 30px; font-size: 1.2rem; cursor: pointer;
+            background: #ff4d4d; color: white; border: none; border-radius: 50px;
+            box-shadow: 0 0 20px rgba(255,77,77,0.6); transition: 0.3s;
+        }
+        button:hover { transform: scale(1.1); background: #ff3333; }
+
+        /* หน้าใส่รหัส */
+        input {
+            padding: 10px; font-size: 2rem; width: 200px; text-align: center;
+            border-radius: 10px; border: 2px solid #ff4d4d; background: #222; color: #fff;
+        }
+
+        /* หน้าสุดท้าย */
+        .photo-frame {
+            width: 250px; height: 250px; border: 5px solid white;
+            border-radius: 20px; overflow: hidden; margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-frame video { width: 100%; height: 100%; object-fit: cover; }
+        .message { font-size: 1.5rem; line-height: 1.6; padding: 0 20px; }
+
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+    </style>
+</head>
+<body>
+
+    <canvas id="fireworks"></canvas>
+
+    <div id="page1" class="container">
+        <h1>มีของขวัญจะให้แหละ...</h1>
+        <button onclick="showPage(2)">คลิกเพื่อเปิดดู</button>
+    </div>
+
+    <div id="page2" class="container">
+        <h2>ใส่รหัสผ่าน 6 หลัก <br>(Happy New Year)</h2>
+        <input type="password" id="pin" maxlength="6" placeholder="******" oninput="checkPin()">
+        <p id="error" style="color: red; display: none; margin-top: 10px;">รหัสไม่ถูกต้องนะจ๊ะ</p>
+    </div>
+
+    <div id="page3" class="container">
+        <div class="photo-frame">
+            <video autoplay loop muted playsinline>
+                <source src="couple-video.mp4" type="video/mp4">
+                รูปคู่ของเรา
+            </video>
+        </div>
+        <div class="message">
+            รักนะ เบ๊บถึงจะไม่ได้อยู่ด้วยกัน <br>
+            แต่พี่รักเบ๊บที่สุด <br>
+            อยู่ด้วยกันไปนานๆนะ ❤️
+        </div>
+        <audio id="bgMusic" loop>
+            <source src="mp3.m4a" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        function showPage(pageNumber) {
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('page3').style.display = 'none';
+            document.getElementById('page' + pageNumber).style.display = 'flex';
+        }
+
+        function checkPin() {
+            const pin = document.getElementById('pin').value;
+            const correctPin = "200705"; // **เปลี่ยนรหัสผ่านตรงนี้**
+
+            if (pin.length === 6) {
+                if (pin === correctPin) {
+                    showPage(3);
+                    startFireworks();
+                    document.getElementById('bgMusic').play();
+                } else {
+                    document.getElementById('error').style.display = 'block';
+                    document.getElementById('pin').value = '';
+                }
+            }
+        }
+
+        function startFireworks() {
+            var duration = 15 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+    </script>
+</body>
+</html>
